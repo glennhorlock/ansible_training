@@ -1,0 +1,7 @@
+- hosts: planetexpress
+  gather_facts: yes
+
+  tasks:
+    - name: Print Ansible Distribution
+      debug:
+        var: ansible_distribution
