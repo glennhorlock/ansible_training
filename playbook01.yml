@@ -1,0 +1,56 @@
+---
+# Learning about Playbooks
+- name: bootstrapping and new user creation
+  hosts: raiders        # our group in our inventory
+  gather_facts: no
+  connection: ansible.builtin.ssh
+
+  vars:
+    newuser1: marian
+    newuser2: belloq
+    newuser3: willie
+    newuser4: elsa
+
+  tasks:
+  # use the raw module
+  - name: update apt with latest repo info
+    ansible.builtin.raw: "apt update -y"
+    become: yes
+
+  - name: install py3 and pip3 with ansible raw
+    ansible.builtin.raw: "apt install -y python3-pip"
+    become: yes
+
+  - name: create new group
+    ansible.builtin.group:
+      name: indymovies
+      state: present
+    become: yes
+
+  - name: Add newuser1 to target hosts
+    ansible.builtin.user:
+      name: "{{ newuser1 }}"
+      state: present
+      group: indymovies
+    become: yes
+
+  - name: Add newuser2 to target hosts   
+    ansible.builtin.user:
+      name: "{{ newuser2 }}"
+      state: present
+      group: indymovies
+    become: yes
+
+  - name: add newuser3 to target hosts
+    ansible.builtin.user:
+      name: "{{ newuser3 }}"
+      state: present
+      group: indymovies
+    become: yes
+
+  - name: add newuser4 to target hosts
+    ansible.builtin.user:
+      name: "{{ newuser4 }}"
+      state: present
+      group: indymovies
+    become: yes

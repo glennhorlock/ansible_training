@@ -1,0 +1,25 @@
+---
+- name: Loop over packages to install
+  hosts: raiders
+  gather_facts: yes
+
+  vars_files:
+  - vars/aptpkgs.yml
+
+  tasks:
+  ## upgrade apt with latest repo info
+  - name: "update apt"
+    ansible.builtin.raw: "apt update -y"
+    become: yes
+
+  ## ensure python3 is installed on indy
+  - name: "Bootstrap python3 install"
+    ansible.builtin.raw: "apt install -y {{ item }}"
+    loop: "{{ bootstrap_packages }}"
+    become: yes
+
+  ## use the apt module to deploy apps
+  - name: "Apt install packages"
+    ansible.builtin.apt:
+      name: "{{ apt_pkgs }}"
+    become: yes

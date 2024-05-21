@@ -1,0 +1,35 @@
+---
+- name: bootstrapping and new user creation
+  hosts: raiders
+  gather_facts: no
+  connection: ansible.builtin.ssh
+
+  vars:
+    newusers:
+    - marian
+    - belloq
+    - willie
+    - elsa
+
+  tasks:
+  - name: update apt with latest repo info
+    ansible.builtin.raw: "apt update -y"
+    become: yes
+
+  - name: install py3 and pip3 with ansible raw
+    ansible.builtin.raw: "apt install -y python3-pip"
+    become: yes
+
+  - name: create new group
+    ansible.builtin.group:
+      name: indymovies
+      state: present
+    become: yes
+
+  - name: Add newusers to target hosts
+    ansible.builtin.user:
+      name: "{{ item }}"
+      state: present
+      group: indymovies
+    become: yes
+    loop: "{{ newusers }}"
