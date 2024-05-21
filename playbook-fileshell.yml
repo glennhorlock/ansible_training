@@ -1,0 +1,18 @@
+---
+- name: A simple file playbook
+  hosts: planetexpress
+  gather_facts: yes
+  connection: ansible.builtin.ssh
+
+  tasks:
+   - name: make a directory
+     ansible.builtin.file:
+       path: ~/output/
+       state: directory
+
+   - name: add crap to a file
+     copy:
+       dest: ~/output/test.txt
+       content: "{{ ansible_env.HOME }}"
+         #   - name: use shell module with wildcarding
+         #     ansible.builtin.shell: echo $HOME >> ~/output/path.txt
