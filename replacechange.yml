@@ -1,0 +1,21 @@
+---
+ - name: Exploring replace
+   hosts: planetexpress
+   gather_facts: yes # required for our when statement
+   connection: ansible.builtin.ssh  # default connection type
+
+   vars:
+    - fileloc: "/var/log/bootstrap.log"
+
+   tasks:
+    # ansible.builtin.replace - replaces ALL instances of an occurrence
+    - name: "Insert a line into {{ fileloc }}"
+      ansible.builtin.replace:
+        path: "{{ fileloc }}"
+        regexp: "^Setting up lib.*"
+        replace: "REDACTED BY ANSIBLE replace module"
+        backup: yes
+      become: true
+      when: ansible_os_family == "Debian"  # restrict to only Debian hosts
+                                           # depends on gather_facts
+
