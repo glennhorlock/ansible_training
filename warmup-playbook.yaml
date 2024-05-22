@@ -1,0 +1,33 @@
+---
+- name: Create DIRS Download a File and Replace some Crap in the File
+  hosts: planetexpress
+  connection: ansible.builtin.ssh
+  gather_facts: no
+ 
+  vars: 
+    dat_url: "https://raw.githubusercontent.com/csfeeser/ansible_essentials/main/data/downloadme.txt"
+    beatles:
+      - lennon
+      - mccartney
+      - starr
+      - harrison
+  tasks:
+  - name: Create a dir if it does not exist
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: directory
+    loop: "{{ beatles }}"
+# the above task would be idempotent or whatever it is, because the DIRS already exist so won't create them again
+  - name: Download the download file
+    get_url:
+      url: "{{ dat_url }}"
+        #url: https://raw.githubusercontent.com/csfeeser/ansible_essentials/main/data/downloadme.txt
+      dest: lennon/downloadme.txt
+
+  - name: Replace the string PLACEHOLDER in the downloadme file
+    ansible.builtin.replace:
+      path: lennon/downloadme.txt
+      regexp: "PLACEHOLDER*"
+      replace: "David Ginola"
+      backup: yes
+    become: true
