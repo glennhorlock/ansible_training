@@ -1,0 +1,29 @@
+---
+- name: Learning about blocks
+  hosts: planetexpress
+  connection: ansible.builtin.ssh   # default connection type
+  gather_facts: no
+
+  tasks:
+
+  - name: BLOCK - This is what we want to TRY to do
+    block:
+
+      - name: Example task
+        ansible.builtin.shell: "echo 'My single task ran' > example.txt"
+
+      - name: Example task
+        ansible.builtin.shell: "echo 'My second task ran' >> example.txt"
+
+      - name: Example task (mimic a failure)
+        ansible.builtin.shell: "/bin/false"
+
+    # this should only run IF we encounter a failure
+    rescue:
+      - name: Rescue task
+        ansible.builtin.shell: "echo 'My rescue code ran. Maybe it undoes whatever the block tried to do' >> example.txt"
+
+    # this should ALWAYS run (even if we had a failure in the rescue block!)
+    always:
+      - name: Always task
+        ansible.builtin.shell: "echo 'This always runs. Maybe it is a commit, or an entry in a log' >> example.txt"
