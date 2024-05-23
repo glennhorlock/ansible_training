@@ -1,0 +1,22 @@
+---
+- name: Create directories for popular cartoon characters on farnsworth & include a password vault file (module 58)
+  hosts: farnsworth
+  gather_facts: no
+
+  vars_files:
+    - vault.yml
+  
+  vars:
+    cartoon_characters:
+      - MickeyMouse
+      - BugsBunny
+      - HomerSimpson
+      - SpongeBobSquarePants
+      - ScoobyDoo
+
+  tasks:
+    - name: Create directories for each cartoon character
+      file:
+        path: "{{ item }}"
+        state: directory
+      loop: "{{ cartoon_characters }}"
